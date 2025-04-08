@@ -1,0 +1,18 @@
+<?php
+
+$commands = [
+    //builtin commands
+    'create:migration' => 'System\Cli\CreateMigration',
+    'create:controller' => 'System\Cli\CreateController',
+    'create:model' => 'System\Cli\CreateModel',
+    'create:package' => 'System\Cli\GeneratePackageCommand',
+    'run:migration'    => 'System\Cli\RunMigration',
+
+    //Routing Cache Commands
+    'routing:clear' => 'System\Cli\RoutingClear',
+    'route:cache' => 'System\Cli\RouteCache',
+
+    //Custom Commands
+];
+
+return $commands;
