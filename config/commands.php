@@ -4,6 +4,7 @@ $commands = [
     //builtin commands
     'create:migration' => 'System\Cli\CreateMigration',
     'create:controller' => 'System\Cli\CreateController',
+    'create:auth' => 'System\Cli\CreateAuthCommand',
     'create:model' => 'System\Cli\CreateModel',
     'create:package' => 'System\Cli\GeneratePackageCommand',
     'run:migration'    => 'System\Cli\SecMigration',
