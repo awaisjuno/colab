@@ -12,6 +12,12 @@
     "require": {
         "php": "^7.3 || ^8.0"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/awaisjuno/colab"
+        }
+    ],
     "scripts": {
         "post-create-project-cmd": [
             "echo 'Colab project has been set up!'"
