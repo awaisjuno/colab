@@ -7,7 +7,10 @@
             "System\\": "system/",
             "App\\": "app/",
             "System\\Helpers\\": "system/helpers/"
-        }
+        },
+        "files": [
+            "system/helpers/helper.php"
+        ]
     },
     "require": {
         "php": "^7.3 || ^8.0"
