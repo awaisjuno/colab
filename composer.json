@@ -1,9 +1,20 @@
 {
+    "name": "colab/cli",
+    "description": "Colab CLI Project",
+    "type": "project",
     "autoload": {
         "psr-4": {
             "System\\": "system/",
             "App\\": "app/",
             "System\\Helpers\\": "system/helpers/"
         }
+    },
+    "require": {
+        "php": "^7.3 || ^8.0"
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "echo 'Colab project has been set up!'"
+        ]
     }
 }
