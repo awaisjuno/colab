@@ -10,8 +10,7 @@
         }
     },
     "require": {
-        "php": "^7.3 || ^8.0",
-        "colab/cli": "v1"
+        "php": "^7.3 || ^8.0"
     },
     "repositories": [
         {
@@ -20,6 +19,9 @@
         }
     ],
     "scripts": {
+        "serve": [
+            "php serve.php"
+        ],
         "post-create-project-cmd": [
             "echo 'Colab project has been set up!'"
         ]

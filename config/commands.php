@@ -6,7 +6,8 @@ $commands = [
     'create:controller' => 'System\Cli\CreateController',
     'create:model' => 'System\Cli\CreateModel',
     'create:package' => 'System\Cli\GeneratePackageCommand',
-    'run:migration'    => 'System\Cli\RunMigration',
+    'run:migration'    => 'System\Cli\SecMigration',
+    'migrate'    => 'System\Cli\RunMigration',
 
     //Routing Cache Commands
     'routing:clear' => 'System\Cli\RoutingClear',

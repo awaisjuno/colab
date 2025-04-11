@@ -2,21 +2,27 @@
 
 namespace System\Cli;
 
-class RunMigration
+use System\Database\Schema;
+
+class SecMigration
 {
+    public function __construct()
+    {
+    }
+
     public function execute()
     {
         $migrationDir = ROOT_DIR . 'app/migrations/';
 
         if (!is_dir($migrationDir)) {
-            echo "❌ Error: Migrations directory does not exist.\n";
+            echo "Error: Migrations directory does not exist.\n";
             return;
         }
 
         $migrationFiles = glob($migrationDir . '*.php');
 
         if (empty($migrationFiles)) {
-            echo "⚠️ No migrations found.\n";
+            echo "No migrations found.\n";
             return;
         }
 
@@ -25,21 +31,21 @@ class RunMigration
 
             $className = pathinfo($migrationFile, PATHINFO_FILENAME);
 
+            // Check if the class exists and execute `up()` method
             if (class_exists($className)) {
-                $instance = new $className();
+                $migrationInstance = new $className();
 
-                if (method_exists($instance, 'up')) {
+                if (method_exists($migrationInstance, 'up')) {
                     echo "Running migration: {$className}...\n";
-                    $instance->up();
-                    echo "Migrated: {$className}\n\n";
+                    $migrationInstance->up();
                 } else {
-                    echo "Skipped: {$className} has no 'up' method.\n";
+                    echo "Migration {$className} does not have an 'up' method.\n";
                 }
             } else {
-                echo "Class {$className} not found.\n";
+                echo "Class {$className} not found in {$migrationFile}.\n";
             }
         }
 
-        echo "🎉 All migrations executed.\n";
+        echo "Migrations executed successfully.\n";
     }
 }
