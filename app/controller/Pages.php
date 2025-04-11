@@ -8,8 +8,17 @@ class Pages extends Controller
     public function index()
     {
         $this->load->view('pages/header');
-        $this->load->view('landing');
-        $this->load->view('pages/footer');
+        //$this->load->view('landing');
+        //$this->load->view('pages/footer');
+
+    }
+
+
+    public function home()
+    {
+        $this->load->view('pages/header');
+        //$this->load->view('landing');
+        //$this->load->view('pages/footer');
 
     }
 }

@@ -1,11 +1,20 @@
 <?php return array (
-  'hash' => '2b480344d33ad0ffecf696e0562ac078',
+  'hash' => '25d6954e7b4f9888095ec3adaedc7f14',
   'routes' => 
   array (
-    '/' => 
+    '/gg' => 
     array (
       'controller' => 'Pages',
       'method' => 'index',
+      'middleware' => 
+      array (
+        0 => 'Authenticateff',
+      ),
+    ),
+    'home' => 
+    array (
+      'controller' => 'Pages',
+      'method' => 'show',
     ),
   ),
 );

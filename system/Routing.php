@@ -21,7 +21,6 @@ class Routing {
             }
         }
 
-        // If cache doesn't exist or hash doesn't match, regenerate cache
         $this->routes = include $routeFile;
 
         // Make sure the cache directory exists
@@ -50,29 +49,33 @@ class Routing {
             $controllerName = $route['controller'];
             $method = $route['method'];
             $params = $route['params'];
+            $middleware = $route['middleware'] ?? [];
 
-            $controllerFile = "app/controller/{$controllerName}Controller.php";
+            // Check if middleware exists and execute it
+            $this->executeMiddleware($middleware, function() use ($controllerName, $method, $params) {
+                $controllerFile = "app/controller/{$controllerName}.php";
 
-            if (file_exists($controllerFile)) {
-                require_once $controllerFile;
+                if (file_exists($controllerFile)) {
+                    require_once $controllerFile;
 
-                $controllerNameWithNamespace = 'App\Controller\\' . $controllerName . 'Controller';
+                    $controllerNameWithNamespace = 'App\Controller\\' . $controllerName;
 
-                if (class_exists($controllerNameWithNamespace)) {
-                    $controller = new $controllerNameWithNamespace;
+                    if (class_exists($controllerNameWithNamespace)) {
+                        $controller = new $controllerNameWithNamespace;
 
-                    if (method_exists($controller, $method)) {
-                        call_user_func_array([$controller, $method], $params);
-                        return;
+                        if (method_exists($controller, $method)) {
+                            call_user_func_array([$controller, $method], $params);
+                            return;
+                        } else {
+                            echo "Method $method not found in controller $controllerName<br>";
+                        }
+                    } else {
+                        echo "Class $controllerNameWithNamespace not found<br>";
                     }
-
-                    echo "Method $method not found in controller $controllerName<br>";
                 } else {
-                    echo "Class $controllerNameWithNamespace not found<br>";
+                    echo "Controller file $controllerFile not found<br>";
                 }
-            } else {
-                echo "Controller file $controllerFile not found<br>";
-            }
+            });
         } else {
             $this->handleDynamicRoute($url);
         }
@@ -155,12 +158,60 @@ class Routing {
                     return [
                         'controller' => $action['controller'],
                         'method' => $action['method'],
-                        'params' => $params
+                        'params' => $params,
+                        'middleware' => $action['middleware'] ?? []
                     ];
                 }
             }
         }
 
         return null;
+    }
+
+    /**
+     * Execute middleware if any are defined.
+     *
+     * @param array $middleware
+     * @param callable $next
+     */
+    private function executeMiddleware(array $middleware, callable $next): void {
+        $request = $_SERVER;
+
+        if (empty($middleware)) {
+            $next();
+            return;
+        }
+
+        $middlewareIndex = 0;
+
+        $this->callMiddleware($middleware, $middlewareIndex, $request, $next);
+    }
+
+    /**
+     * Call each middleware in the chain.
+     *
+     * @param array $middleware
+     * @param int $middlewareIndex
+     * @param array $request
+     * @param callable $next
+     */
+    private function callMiddleware(array $middleware, int $middlewareIndex, array $request, callable $next): void {
+        if ($middlewareIndex >= count($middleware)) {
+            $next();
+            return;
+        }
+
+        $middlewareClass = 'Middleware\\' . $middleware[$middlewareIndex];
+        $middlewareIndex++;
+
+        if (class_exists($middlewareClass)) {
+            $middlewareInstance = new $middlewareClass();
+            $middlewareInstance->handle($request, function() use ($middleware, $middlewareIndex, $request, $next) {
+                // Recursively call the next middleware in the chain
+                $this->callMiddleware($middleware, $middlewareIndex, $request, $next);
+            });
+        } else {
+            echo "Middleware class $middlewareClass not found<br>";
+        }
     }
 }
