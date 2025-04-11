@@ -78,33 +78,5 @@ class Controller {
         return isset($_POST[$key]) ? trim($_POST[$key]) : null;
     }
 
-    /**
-     * Fetch the base URL dynamically from the config.php file.
-     *
-     * @return string Returns the base URL defined in config.php.
-     */
-        public function getBaseUrl()
-        {
-            if (is_array($this->config) && isset($this->config['base_url'])) {
-                return $this->config['base_url'];
-            }
-
-            return 'http://localhost/colab';
-        }
-
-    /**
-     * Get the current route (excluding the base URL).
-     *
-     * @return string Returns the current route, excluding the base URL.
-     */
-    public function getRoute()
-    {
-        $currentUri = $_SERVER['REQUEST_URI'];
-        $baseUrl = $this->getBaseUrl();
-        $route = str_replace($baseUrl, '', $currentUri);
-        $route = trim($route, '/');
-        return $route;
-    }
-
 }
 ?>
