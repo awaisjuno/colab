@@ -1,1 +1,3 @@
-<?php
+<?= form_open()?>
+
+<?= form_close()?>
