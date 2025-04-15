@@ -246,4 +246,5 @@ class Model
     {
         return $this->pdo->lastInsertId();
     }
+
 }
