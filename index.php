@@ -1,12 +1,14 @@
 <?php
 
-// Include Composer autoloader
-require_once __DIR__ . '/vendor/autoload.php';
+define('ROOT_DIR', __DIR__);
 
-require_once "system/Processing.php";
-require_once "system/Routing.php";
+require_once ROOT_DIR . '/vendor/autoload.php';
 
 use System\Processing;
 
-// Initialize the Processing class
-$processing = new Processing();
+try {
+    $processing = new Processing();
+} catch (Throwable $e) {
+    echo "<h1>Something went wrong!</h1>";
+    echo "<pre>" . $e->getMessage() . "</pre>";
+}
