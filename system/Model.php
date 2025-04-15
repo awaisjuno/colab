@@ -1,30 +1,42 @@
 <?php
 
 namespace System;
+
 use System\Database\Connection;
 
 /**
- * Model class handles database interactions using PDO for executing CRUD operations.
+ * Class Model
+ *
+ * Provides a base database interaction layer using PDO.
+ * Supports CRUD operations with method chaining for flexible query building.
+ *
+ * @package System
  */
-class Model {
-
+class Model
+{
     /**
      * @var \PDO
-     * The PDO instance used to connect to the database and execute queries.
      */
     private $pdo;
 
     /**
-     * @var array
-     * Stores the "WHERE" conditions for database queries.
+     * @var array Conditions to apply in WHERE clause
      */
-    private $whereConditions = [];
+    private array $whereConditions = [];
 
     /**
-     * Constructor initializes the database connection.
-     * It sets up the PDO instance using configuration values.
-     *
-     * @throws \PDOException if the connection fails
+     * @var string Table name to operate on
+     */
+    private string $table = '';
+
+    /**
+     * @var int|null Limit for SELECT query
+     */
+    private ?int $limitValue = null;
+
+    /**
+     * Model constructor.
+     * Initializes database connection using the Connection class.
      */
     public function __construct()
     {
@@ -33,144 +45,205 @@ class Model {
     }
 
     /**
-     * Insert data into the specified table.
+     * Insert a new record into the database.
      *
-     * @param string $table The name of the table to insert data into.
-     * @param array $data Associative array of column names and their values.
-     *
-     * @return bool Returns true on success, false on failure.
+     * @param string $table Table name
+     * @param array $data Associative array of column => value
+     * @return bool True on success, false on failure
      */
-    public function insert($table, $data) {
-        // Prepare columns and values for the SQL query
+    public function insert(string $table, array $data): bool
+    {
         $columns = implode(", ", array_keys($data));
         $values = ":" . implode(", :", array_keys($data));
 
-        // Build the SQL query
         $sql = "INSERT INTO $table ($columns) VALUES ($values)";
         $stmt = $this->pdo->prepare($sql);
 
-        // Execute the statement with the data
         return $stmt->execute($data);
     }
 
     /**
-     * Update data in the specified table based on set conditions.
+     * Update records in the database.
      *
-     * @param string $table The name of the table to update data in.
-     * @param array $data Associative array of column names and their new values.
-     *
-     * @return bool Returns true on success, false on failure.
+     * @param string $table Table name
+     * @param array $data Associative array of column => value to update
+     * @return bool True on success, false on failure
      */
-    public function update($table, $data) {
-        // Prepare SET clause
+    public function update(string $table, array $data): bool
+    {
         $set = [];
         foreach ($data as $key => $value) {
             $set[] = "$key = :$key";
         }
         $set = implode(", ", $set);
 
-        // Prepare WHERE clause based on stored conditions
         $where = '';
         if (!empty($this->whereConditions)) {
-            $where = 'WHERE ' . implode(' AND ', array_map(fn($key) => "$key = :$key", array_keys($this->whereConditions)));
+            $where = 'WHERE ' . implode(' AND ', array_map(
+                    fn($key) => "$key = :$key", array_keys($this->whereConditions)
+                ));
         }
 
-        // Build the SQL query
         $sql = "UPDATE $table SET $set $where";
         $stmt = $this->pdo->prepare($sql);
-
-        // Merge the data and conditions and execute the statement
         $params = array_merge($data, $this->whereConditions);
+
+        // Reset conditions
         $this->whereConditions = [];
 
         return $stmt->execute($params);
     }
 
     /**
-     * Delete data from the specified table based on conditions.
+     * Delete records from the database.
      *
-     * @param string $table The name of the table to delete data from.
-     *
-     * @return bool Returns true on success, false on failure.
+     * @param string $table Table name
+     * @return bool True on success, false on failure
      */
-    public function delete($table) {
-        // Prepare WHERE clause based on stored conditions
+    public function delete(string $table): bool
+    {
         $where = '';
         if (!empty($this->whereConditions)) {
-            $where = 'WHERE ' . implode(' AND ', array_map(fn($key) => "$key = :$key", array_keys($this->whereConditions)));
+            $where = 'WHERE ' . implode(' AND ', array_map(
+                    fn($key) => "$key = :$key", array_keys($this->whereConditions)
+                ));
         }
 
-        // Build the SQL query
         $sql = "DELETE FROM $table $where";
         $stmt = $this->pdo->prepare($sql);
 
-        // Execute the statement with the conditions
         $params = $this->whereConditions;
+
+        // Reset conditions
         $this->whereConditions = [];
 
         return $stmt->execute($params);
     }
 
     /**
-     * Select data from the specified table based on conditions and optional limit.
+     * Select multiple records from the database.
      *
-     * @param string $table The name of the table to select data from.
-     * @param array $conditions Associative array of conditions for the WHERE clause.
-     * @param int|null $limit Optional limit for the number of rows to return.
-     *
-     * @return array Returns an array of results from the query.
+     * @param string $table Table name
+     * @param array $conditions Associative array of conditions
+     * @param int|null $limit Limit the number of results
+     * @return array Result set as associative array
      */
-    public function select($table, $conditions = [], $limit = null) {
-        // Prepare WHERE clause based on conditions
+    public function select(string $table, array $conditions = [], int $limit = null): array
+    {
         $where = '';
         if (!empty($conditions)) {
-            $where = 'WHERE ' . implode(' AND ', array_map(fn($key) => "$key = :$key", array_keys($conditions)));
+            $where = 'WHERE ' . implode(' AND ', array_map(
+                    fn($key) => "$key = :$key", array_keys($conditions)
+                ));
         }
 
-        // Build the SQL query with optional LIMIT
         $sql = "SELECT * FROM $table $where" . ($limit ? " LIMIT $limit" : "");
         $stmt = $this->pdo->prepare($sql);
-
-        // Execute the query with the conditions
         $stmt->execute($conditions);
 
-        // Return the fetched results as an associative array
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Find a single record by condition.
+     *
+     * @param string $table Table name
+     * @param array $conditions Conditions for WHERE clause
+     * @return array|null Single record or null if not found
+     */
+    public function find(string $table, array $conditions = []): ?array
+    {
+        $where = '';
+        if (!empty($conditions)) {
+            $where = 'WHERE ' . implode(' AND ', array_map(
+                    fn($key) => "$key = :$key", array_keys($conditions)
+                ));
+        }
+
+        $sql = "SELECT * FROM $table $where LIMIT 1";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($conditions);
+
+        return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
     }
 
     /**
      * Add a WHERE condition to the query.
      *
-     * @param string $field The column name for the condition.
-     * @param mixed $value The value to match in the condition.
-     *
-     * @return \System\Model Returns the Model instance to allow method chaining.
+     * @param string $field Column name
+     * @param mixed $value Value to match
+     * @return $this
      */
-    public function where($field, $value) {
+    public function where(string $field, $value): self
+    {
         $this->whereConditions[$field] = $value;
         return $this;
     }
 
     /**
-     * Set a limit for the query.
+     * Add a LIMIT to the query.
      *
-     * @param int $limit The number of rows to limit the result to.
-     *
-     * @return int The limit value.
+     * @param int $limit Number of records to retrieve
+     * @return $this
      */
-    public function limit($limit) {
-        return $limit;
+    public function limit(int $limit): self
+    {
+        $this->limitValue = $limit;
+        return $this;
     }
 
     /**
-     * Get the last inserted ID from the database.
+     * Set the table name for query building.
      *
-     * @return string The ID of the last inserted row.
+     * @param string $tableName
+     * @return $this
      */
-    public function lastInsertId()
+    public function table(string $tableName): self
+    {
+        $this->table = $tableName;
+        return $this;
+    }
+
+    /**
+     * Execute the built SELECT query and return the result.
+     *
+     * @param string|null $table Optional table name (overrides table())
+     * @return array Result set as associative array
+     */
+    public function get(string $table = null): array
+    {
+        $tableName = $table ?? $this->table;
+
+        $where = '';
+        if (!empty($this->whereConditions)) {
+            $where = 'WHERE ' . implode(' AND ', array_map(
+                    fn($key) => "$key = :$key", array_keys($this->whereConditions)
+                ));
+        }
+
+        $sql = "SELECT * FROM $tableName $where";
+
+        if ($this->limitValue !== null) {
+            $sql .= " LIMIT " . $this->limitValue;
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($this->whereConditions);
+
+        // Reset state after query
+        $this->whereConditions = [];
+        $this->limitValue = null;
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get the last inserted ID.
+     *
+     * @return string Last insert ID
+     */
+    public function lastInsertId(): string
     {
         return $this->pdo->lastInsertId();
     }
 }
-
-?>
