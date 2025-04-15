@@ -1,32 +1,33 @@
 {
-    "name": "colab/cli",
-    "description": "Colab CLI Project",
-    "type": "project",
-    "autoload": {
-        "psr-4": {
-            "System\\": "system/",
-            "App\\": "app/",
-            "System\\Helpers\\": "system/helpers/"
-        },
-        "files": [
-            "system/helpers/helper.php"
-        ]
+  "name": "colab/cli",
+  "description": "Colab CLI Project",
+  "type": "project",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "System\\": "system/",
+      "App\\": "app/",
+      "System\\Helpers\\": "system/helpers/"
     },
-    "require": {
-        "php": "^7.3 || ^8.0"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/awaisjuno/colab"
-        }
-    ],
-    "scripts": {
-        "serve": [
-            "php serve.php"
-        ],
-        "post-create-project-cmd": [
-            "echo 'Colab project has been set up!'"
-        ]
+    "files": [
+      "system/helpers/helper.php"
+    ]
+  },
+  "require": {
+    "php": "^7.3 || ^8.0"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/awaisjuno/colab"
     }
+  ],
+  "scripts": {
+    "serve": [
+      "php serve.php"
+    ],
+    "post-create-project-cmd": [
+      "echo 'Colab project has been set up!'"
+    ]
+  }
 }
