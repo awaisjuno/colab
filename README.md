@@ -9,7 +9,7 @@ It provides a lightweight, modular, and scalable structure to build modern appli
 
     Routing and Middleware system
 
-    Service Provider system (like Laravel)
+    Service Provider system
 
     Lightweight and fast
 
@@ -27,7 +27,7 @@ Here’s how a typical request is processed in Colab:
 
     Bootstrap & Entry Point
 
-        Request hits the entry file (usually index.php)
+        Request hits the entry file index.php
 
         It initializes constants like ROOT_DIR and autoloads required files
 
@@ -67,7 +67,7 @@ Here’s how a typical request is processed in Colab:
 
         Loads model(s) or services
 
-        Returns response (view, JSON, redirect, etc.)
+        Returns response
 
     Error Handling & Logging
 
