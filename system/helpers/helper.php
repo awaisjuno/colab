@@ -1,5 +1,19 @@
 <?php
 
+if (!function_exists('view')) {
+    function view(string $view, array $data = []): void
+    {
+        $viewFile = "app/views/{$view}.php";
+
+        if (file_exists($viewFile)) {
+            extract($data);
+            require $viewFile;
+        } else {
+            echo "View file '{$view}.php' not found.";
+        }
+    }
+}
+
 // --------------------
 // 🟡 URL Helpers
 // --------------------
@@ -39,6 +53,11 @@ function form_input($name, $value = '', $attributes = []) {
         $attrs .= "$key=\"$val\" ";
     }
     return "<input type=\"text\" name=\"$name\" value=\"$value\" $attrs />";
+}
+
+function form_label($value)
+{
+    return "<label>". $value ."</label>";
 }
 
 function form_password($name, $attributes = []) {
