@@ -22,7 +22,6 @@ class EnvLoader
             $key = trim($key);
             $value = trim($value);
 
-            // Remove optional surrounding quotes
             $value = trim($value, "\"'");
 
             $_ENV[$key] = $value;
