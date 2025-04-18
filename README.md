@@ -2,7 +2,7 @@
   <img src="https://github.com/user-attachments/assets/3a2d4597-6f27-4a6f-b31e-2f0f2551924b" width="500"/>
 </p>
 
-🧠 Colab — Microservice Architecture Framework
+🧠 Colab Microservice Architecture Framework
 
 Colab is a conceptual PHP-based micro-framework designed around microservice architecture principles and inspired by cloud-native application development patterns.
 
@@ -25,3 +25,8 @@ Custom database abstraction and logging system
 Support for clean MVC pattern
 
 Developer-friendly configuration and autoloading
+
+To Install Colab CLI
+
+composer create-project colab/cli my-project
+To 
