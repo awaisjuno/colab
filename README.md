@@ -25,21 +25,3 @@ Custom database abstraction and logging system
 Support for clean MVC pattern
 
 Developer-friendly configuration and autoloading
-
-
-
-🚀 Colab CLI
-
-composer create-project colab/cli my-project
-
-Create Controller
-
-php cli create:controller PagesController
-
-
-Create Model
-
-php cli create:model User
-
-
-php cli migrate 
