@@ -29,4 +29,3 @@ Developer-friendly configuration and autoloading
 To Install Colab CLI
 
 composer create-project colab/cli my-project
-To 
