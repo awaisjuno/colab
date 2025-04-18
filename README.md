@@ -1,4 +1,6 @@
-(https://github.com/user-attachments/assets/103de2d5-ced7-4173-bf3a-3d00214a6827)![cd492f2f-03da-4586-82fa-c76281d459a8]
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/3a2d4597-6f27-4a6f-b31e-2f0f2551924b" width="500"/>
+</p>
 
 🧠 Colab — Microservice Architecture Framework
 
