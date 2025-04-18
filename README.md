@@ -27,9 +27,9 @@ Support for clean MVC pattern
 Developer-friendly configuration and autoloading
 
 
+
 🔄 Colab Request Cycle
 
-Here’s how a typical request is processed in Colab:
 
     Bootstrap & Entry Point
 
