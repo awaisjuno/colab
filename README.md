@@ -11,12 +11,19 @@ It provides a lightweight, modular, and scalable structure to build modern appli
 🚀 Key Features
 
 Microservice-ready architecture
+
 Routing and Middleware system
+
 Service Provider system
+
 Lightweight and fast
+
 Scalable for cloud deployments
+
 Custom database abstraction and logging system
+
 Support for clean MVC pattern
+
 Developer-friendly configuration and autoloading
 
 
