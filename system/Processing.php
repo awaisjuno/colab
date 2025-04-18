@@ -4,6 +4,7 @@ namespace System;
 
 use PDO;
 use Exception;
+use System\Helpers\EnvLoader;
 
 class Processing
 {
@@ -13,7 +14,9 @@ class Processing
 
     public function __construct()
     {
+        EnvLoader::load(\ROOT_DIR . '/.env');
         $this->setupErrorReporting();
+        $this->container = new Container();
         $this->setupDatabaseConnection();
         $this->loadServices();
         $this->routing = new Routing();
@@ -103,7 +106,9 @@ class Processing
             $this->writeToLog("DB Logging Failed: " . $e->getMessage());
         }
     }
-
+    
+    
+    /**Comment**/
     private function forwardToRouting(): void
     {
         $this->routing->handle();
