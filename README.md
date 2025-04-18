@@ -10,21 +10,15 @@ It provides a lightweight, modular, and scalable structure to build modern appli
 
 🚀 Key Features
 
-    Microservice-ready architecture
+Microservice-ready architecture
+Routing and Middleware system
+Service Provider system
+Lightweight and fast
+Scalable for cloud deployments
+Custom database abstraction and logging system
+Support for clean MVC pattern
+Developer-friendly configuration and autoloading
 
-    Routing and Middleware system
-
-    Service Provider system
-
-    Lightweight and fast
-
-    Scalable for cloud deployments (AWS, GCP, Azure)
-
-    Custom database abstraction and logging system
-
-    Support for clean MVC pattern
-
-    Developer-friendly configuration and autoloading
 
 🔄 Colab Request Cycle
 
@@ -83,7 +77,6 @@ Here’s how a typical request is processed in Colab:
 🚀 Colab CLI
 
 composer create-project colab/cli my-project
-
 
 Create Controller
 
