@@ -28,59 +28,6 @@ Developer-friendly configuration and autoloading
 
 
 
-🔄 Colab Request Cycle
-
-
-    Bootstrap & Entry Point
-
-        Request hits the entry file index.php
-
-        It initializes constants like ROOT_DIR and autoloads required files
-
-    Processing Layer
-
-        The Processing class is instantiated
-
-        It sets up:
-
-            Error handling
-
-            Database connection
-
-            Service Providers via ServiceLoader
-
-            Routing
-
-    ServiceLoader
-
-        Loads providers defined in config/services.php
-
-        Calls their register() method to bind services like routes, events, etc.
-
-    Routing Layer
-
-        Extracts the URI from the request
-
-        Matches it against registered routes
-
-        Applies any middleware if configured
-
-        Forwards the request to the corresponding controller and method
-
-    Controller & Business Logic
-
-        Controller executes business logic
-
-        Loads model(s) or services
-
-        Returns response
-
-    Error Handling & Logging
-
-        Any uncaught exceptions or errors are logged
-
-        Errors are logged both to a file and optionally a bug_reporting database table
-
 🚀 Colab CLI
 
 composer create-project colab/cli my-project
