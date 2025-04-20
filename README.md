@@ -10,4 +10,14 @@ It provides a lightweight, modular, and scalable structure to build modern appli
 
 Colab CLI
 
+To Install Colab
 composer create-project colab/cli my-project
+
+To Create Controller
+php cli create:controller controller_name
+
+To Create Model
+php cli create:model model_name
+
+To Create Migration
+php cli create:migration table_name
