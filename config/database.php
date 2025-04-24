@@ -12,6 +12,7 @@ return [
             'username' => EnvLoader::get('DB_USERNAME'),
             'password' => EnvLoader::get('DB_PASSWORD'),
             'charset' => EnvLoader::get('DB_CHARSET'),
+            'max_connections' => EnvLoader::get('MAX_CONNECTIONS')
         ],
         'analytics' => [
             'host' => 'localhost',
