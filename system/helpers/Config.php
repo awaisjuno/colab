@@ -6,17 +6,22 @@ class Config
 {
     protected static array $items = [];
 
-    public static function load(string $path): void
+    protected static function load()
     {
-        $files = glob($path . '/*.php');
-        foreach ($files as $file) {
-            $key = basename($file, '.php');
-            self::$items[$key] = include $file;
+        if (empty(self::$items)) {
+            $file = __DIR__ . '/../../config/database.php';
+            if (file_exists($file)) {
+                self::$items = include $file;
+            } else {
+                die("Config file not found at: $file");
+            }
         }
     }
 
     public static function get(string $key, $default = null)
     {
+        self::load();
+
         $segments = explode('.', $key);
         $config = self::$items;
 
