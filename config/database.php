@@ -1,18 +1,21 @@
 <?php
+
+use System\Helpers\EnvLoader;
+
 return [
     'default_connection' => 'default',
 
     'mysql' => [
         'default' => [
-            'host' => 'localhost',
-            'dbname' => 'colab',
-            'username' => 'root',
-            'password' => '',
-            'charset' => 'utf8mb4',
+            'host' => EnvLoader::get('DB_HOST'),
+            'dbname' => EnvLoader::get('DB_DATABASE'),
+            'username' => EnvLoader::get('DB_USERNAME'),
+            'password' => EnvLoader::get('DB_PASSWORD'),
+            'charset' => EnvLoader::get('DB_CHARSET'),
         ],
         'analytics' => [
             'host' => 'localhost',
-            'dbname' => 'colab_analytics',
+            'dbname' => '',
             'username' => 'root',
             'password' => '',
             'charset' => 'utf8mb4',
