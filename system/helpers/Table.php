@@ -1,7 +1,6 @@
 <?php
 
 namespace System\helpers;
-
 use System\Database\Connection;
 
 /**
@@ -18,6 +17,7 @@ class Table
     private array $columns = [];
     private ?string $primaryKey = null;
     private array $foreignKeys = [];
+    private array $manyToManyRelations = [];
     private Connection $db;
 
     /**
@@ -133,6 +133,37 @@ class Table
     }
 
     /**
+     * Define a one-to-many relationship
+     *
+     * @param string $columnName
+     * @param string $referencedTable
+     * @param string $referencedColumn
+     * @return $this
+     */
+    public function oneToMany(string $columnName, string $referencedTable, string $referencedColumn): self
+    {
+        // In a One-to-Many relationship, the foreign key will be in the "many" table.
+        return $this->foreign($columnName, $referencedTable, $referencedColumn);
+    }
+
+    /**
+     * Define a many-to-many relationship
+     *
+     * @param string $relationTableName
+     * @param string $firstColumn
+     * @param string $secondColumn
+     * @return $this
+     */
+    public function manyToMany(string $relationTableName, string $firstColumn, string $secondColumn): self
+    {
+        $this->manyToManyRelations[] = [
+            'table' => $relationTableName,
+            'columns' => [$firstColumn, $secondColumn]
+        ];
+        return $this;
+    }
+
+    /**
      * Generate the SQL string to create the table
      *
      * @return string
@@ -151,7 +182,33 @@ class Table
         }
 
         $sql .= ")";
+
+        // Create many-to-many tables if any are defined
+        foreach ($this->manyToManyRelations as $relation) {
+            $sql .= "\n" . $this->createManyToManyTableSQL($relation['table'], $relation['columns']);
+        }
+
         return $sql;
+    }
+
+    /**
+     * Generate the SQL for a many-to-many relationship table
+     *
+     * @param string $relationTableName
+     * @param array $columns
+     * @return string
+     */
+    private function createManyToManyTableSQL(string $relationTableName, array $columns): string
+    {
+        $firstColumn = $columns[0];
+        $secondColumn = $columns[1];
+
+        return "CREATE TABLE IF NOT EXISTS $relationTableName (
+            $firstColumn INT,
+            $secondColumn INT,
+            FOREIGN KEY ($firstColumn) REFERENCES {$this->tableName}($this->primaryKey),
+            FOREIGN KEY ($secondColumn) REFERENCES {$this->tableName}($this->primaryKey)
+        )";
     }
 
     /**
