@@ -1,7 +1,5 @@
 <?php
 
-
-// system/helpers/GraphQLParser.php
 namespace System\Helpers;
 
 class GraphQL
