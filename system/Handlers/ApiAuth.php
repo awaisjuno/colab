@@ -35,8 +35,8 @@ class ApiAuth
     public function logHit(string $route, string $ip, int $tokenId): bool
     {
         $stmt = $this->pdo->prepare("
-            INSERT INTO api_hits (route, ip_address, token_id, is_active, is_delete) 
-            VALUES (:route, :ip_address, :token_id, 1, 0)
+            INSERT INTO api_hits (route, ip_address, token_id,) 
+            VALUES (:route, :ip_address, :token_id)
         ");
 
         return $stmt->execute([
