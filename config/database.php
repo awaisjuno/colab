@@ -36,10 +36,10 @@ return [
             'path' => __DIR__ . '/../storage/cache/',
         ],
         'redis' => [
-            'host' => '127.0.0.1',
-            'port' => 6379,
-            'timeout' => 1.5,
-            'database' => 0,
+            'host' => EnvLoader::get('REDIS_HOST'),
+            'port' => EnvLoader::get('REDIS_PORT'),
+            'timeout' => EnvLoader::get('REDIS_TIMEOUT'),
+            'database' => EnvLoader::get('REDIS_DATABASE'),
         ]
     ]
 ];
