@@ -171,3 +171,21 @@ function verify_csrf_token() {
         }
     }
 }
+
+function request($value, $method = 'POST') {
+    if ($method === 'POST') {
+        if (isset($_POST[$value])) {
+            return $_POST[$value];
+        }
+    } elseif ($method === 'GET') {
+        if (isset($_GET[$value])) {
+            return $_GET[$value];
+        }
+    }
+
+    return null;
+}
+
+function hashToken($value) {
+    return password_hash($value, PASSWORD_BCRYPT);
+}
