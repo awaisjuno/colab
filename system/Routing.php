@@ -97,6 +97,10 @@ class Routing {
         $urlParts = isset($_GET['url']) ? explode('/', trim($_GET['url'], '/')) : [];
         $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
+        if (isset($urlParts[0]) && $urlParts[0] === 'api') {
+            array_shift($urlParts);
+        }
+
         if (empty($urlParts[0])) {
             $this->handleLanding();
             return;
