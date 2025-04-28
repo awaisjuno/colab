@@ -142,17 +142,17 @@ class Processing
     {
         try {
             $headers = getallheaders();
-            $token = $headers['Authorization'] ?? null;
+            $token = $headers['api_token'] ?? null;
+            $ApiSecret = $headers['api_secret'] ?? null;
 
             if (!$token) {
-                throw new \Exception("Missing API token in headers.");
-            }
+                throw new \Exception("API token is missing from the request headers. Please provide a valid API token.");            }
 
             $token = str_replace('Bearer ', '', $token);
+            $ApiSecret = str_replace('Bearer ', '', $ApiSecret);
 
             $apiAuth = new ApiAuth();
-            $tokenData = $apiAuth->validateToken($token);
-            //$apiAuth->logHit($requestUri, $_SERVER['REMOTE_ADDR'], $tokenData['detail_id']);
+            $tokenData = $apiAuth->validateToken($token, $ApiSecret);
         } catch (\Exception $e) {
             http_response_code(401);
             echo json_encode(['error' => $e->getMessage()]);
