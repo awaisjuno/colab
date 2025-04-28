@@ -5,6 +5,7 @@ $commands = [
     'create:migration' => 'System\Cli\CreateMigration',
     'create:controller' => 'System\Cli\CreateController',
     'create:command' => 'System\Cli\CreateCustomCommand',
+    'create:task' => 'System\Cli\CreateCustomTask',
     'create:auth' => 'System\Cli\CreateAuthCommand',
     'create:model' => 'System\Cli\CreateModel',
     'create:package' => 'System\Cli\GeneratePackageCommand',
@@ -16,7 +17,6 @@ $commands = [
     'routing:clear' => 'System\Cli\RoutingClear',
     'route:cache' => 'System\Cli\RouteCache',
 
-    //Custom Commands
 ];
 
 return $commands;
