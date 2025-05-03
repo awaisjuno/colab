@@ -15,6 +15,8 @@ $commands = [
     'run:command'    => 'System\Cli\RunCommand',
     'migrate'    => 'System\Cli\RunMigration',
     'list' => 'System\Cli\ListCommands',
+    'sync:scheduler' => 'System\Cli\SyncSchedulers',
+    'sync:jobs' => 'System\Cli\SyncJobs',
 
     //Routing Cache Commands
     'routing:clear' => 'System\Cli\RoutingClear',
