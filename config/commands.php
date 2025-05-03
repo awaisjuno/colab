@@ -9,6 +9,7 @@ $commands = [
     'create:auth' => 'System\Cli\CreateAuthCommand',
     'create:model' => 'System\Cli\CreateModel',
     'create:job' => 'System\Cli\CreateJob',
+    'create:scheduler' => 'System\Cli\CreateScheduler',
     'create:package' => 'System\Cli\GeneratePackageCommand',
     'run:migration'    => 'System\Cli\SecMigration',
     'run:command'    => 'System\Cli\RunCommand',
