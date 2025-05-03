@@ -14,6 +14,7 @@ $commands = [
     'run:migration'    => 'System\Cli\SecMigration',
     'run:command'    => 'System\Cli\RunCommand',
     'migrate'    => 'System\Cli\RunMigration',
+    'list' => 'System\Cli\ListCommands',
 
     //Routing Cache Commands
     'routing:clear' => 'System\Cli\RoutingClear',
