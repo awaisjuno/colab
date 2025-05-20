@@ -10,45 +10,36 @@ class GeneratePackageCommand
 
     public function execute()
     {
-        // The package name is expected as the first argument when running the CLI command.
-        $packageName = $GLOBALS['argv'][2];  // Getting the package name from command line argument.
-
-        $this->handle($packageName);  // Calling handle() method to handle the package creation logic
+        $packageName = $GLOBALS['argv'][2];
+        $this->handle($packageName);
     }
 
     public function handle($packageName)
     {
-        // Validate package name.
         if (empty($packageName)) {
             echo "Error: Package name is required.\n";
             return;
         }
 
-        // Define the directory path for the package inside vendor directory
         $packagePath = __DIR__ . "/../../vendor/{$packageName}";
 
-        // Check if the package already exists.
         if (file_exists($packagePath)) {
             echo "Error: Package '{$packageName}' already exists.\n";
             return;
         }
 
-        // Create the package folder structure
         try {
             mkdir($packagePath, 0777, true);
             mkdir("{$packagePath}/src", 0777, true);
-            mkdir("{$packagePath}/src/Controllers", 0777, true);
-            mkdir("{$packagePath}/src/Models", 0777, true);
-            mkdir("{$packagePath}/src/Views", 0777, true);
-            mkdir("{$packagePath}/routes", 0777, true);
-            mkdir("{$packagePath}/src/Providers", 0777, true); // Ensure the Providers directory exists
+            mkdir("{$packagePath}/src/Controller", 0777, true);
+            mkdir("{$packagePath}/src/Model", 0777, true);
+            mkdir("{$packagePath}/src/View", 0777, true);
+            mkdir("{$packagePath}/src/Providers", 0777, true);
 
-            // Create the necessary files
             $this->createServiceProviderFile($packagePath, $packageName);
-            $this->createRoutesFile($packagePath, $packageName);  // Pass $packageName to method
-            $this->createControllerFile($packagePath, $packageName);  // Pass $packageName to method
-            $this->createModelFile($packagePath, $packageName);  // Pass $packageName to method
-            $this->createPackageConfigFile($packagePath, $packageName); // Add configuration file
+            $this->createControllerFile($packagePath, $packageName);
+            $this->createModelFile($packagePath, $packageName);
+            $this->createComposerJsonFile($packagePath, $packageName);
 
             echo "Package '{$packageName}' has been created successfully.\n";
         } catch (\Exception $e) {
@@ -56,24 +47,22 @@ class GeneratePackageCommand
         }
     }
 
-    protected function createServiceProviderFile($packagePath, $packageName)
+    protected function createServiceProviderFile(string $packagePath, string $packageName): void
     {
         $serviceProviderContent = "<?php
 
 namespace {$packageName}\\Providers;
 
-use Illuminate\\Support\\ServiceProvider;
+use System\\Providers\\ServiceProvider;
 
 class {$packageName}ServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        // Bind your services or packages here.
     }
 
     public function boot()
     {
-        // Perform any bootstrapping tasks.
     }
 }
 ";
@@ -81,71 +70,85 @@ class {$packageName}ServiceProvider extends ServiceProvider
         file_put_contents("{$packagePath}/src/Providers/{$packageName}ServiceProvider.php", $serviceProviderContent);
     }
 
-    protected function createRoutesFile($packagePath, $packageName)
-    {
-        $routesContent = "<?php
-
-return [
-    '/home' => ['controller' => '{$packageName}\\Controllers\\User', 'method' => 'index'],
-    'about' => ['controller' => '{$packageName}\\Controllers\\Pages', 'method' => 'about'],
-    'posts/{id}' => ['controller' => '{$packageName}\\Controllers\\Posts', 'method' => 'show'],
-    'login' => ['controller' => '{$packageName}\\Controllers\\Auth', 'method' => 'login'],
-    'register' => ['controller' => '{$packageName}\\Controllers\\Auth', 'method' => 'register'],
-];
-";
-
-        file_put_contents("{$packagePath}/routes/web.php", $routesContent);
-    }
-
-    protected function createControllerFile($packagePath, $packageName)
+    protected function createControllerFile(string $packagePath, string $packageName): void
     {
         $controllerContent = "<?php
 
-namespace {$packageName}\\Controllers;
+namespace {$packageName}\\Controller;
 
-use App\\Http\\Controllers\\Controller;
+use System\\Controller;
+use {$packageName}\\Model\\ExampleModel;
 
 class ExampleController extends Controller
 {
+    protected \$model;
+
+    public function __construct()
+    {
+        parent::__construct();
+        \$this->model = new ExampleModel();
+    }
+
     public function index()
     {
-        return view('{$packageName}::index');
+        \$this->load->view('{$packageName}/index');
     }
 }
 ";
 
-        file_put_contents("{$packagePath}/src/Controllers/ExampleController.php", $controllerContent);
+        file_put_contents("{$packagePath}/src/Controller/ExampleController.php", $controllerContent);
     }
 
-    protected function createModelFile($packagePath, $packageName)
+    protected function createModelFile(string $packagePath, string $packageName): void
     {
         $modelContent = "<?php
 
-namespace {$packageName}\\Models;
+namespace {$packageName}\\Model;
 
-use Illuminate\\Database\\Eloquent\\Model;
+use System\\Model;
 
 class ExampleModel extends Model
 {
-    protected \$table = '{$packageName}_example';
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function fetchExampleData()
+    {
+        return \$this->select('example_table')->get();
+    }
 }
 ";
 
-        file_put_contents("{$packagePath}/src/Models/ExampleModel.php", $modelContent);
+        file_put_contents("{$packagePath}/src/Model/ExampleModel.php", $modelContent);
     }
 
-    protected function createPackageConfigFile($packagePath, $packageName)
+    protected function createComposerJsonFile(string $packagePath, string $packageName): void
     {
-        $configContent = "<?php
+        $composerName = strtolower(str_replace('\\', '-', $packageName));
 
-return [
-    'name' => '{$packageName}',
-    'version' => '1.0.0',
-    'description' => 'A basic package for {$packageName}.',
-    'author' => 'Your Name',
-];
-";
+        $composerJson = [
+            'name' => "vendor/{$composerName}",
+            'description' => "A basic package for {$packageName}.",
+            'type' => 'library',
+            'license' => 'MIT',
+            'autoload' => [
+                'psr-4' => [
+                    "{$packageName}\\" => 'src/',
+                ],
+            ],
+            'authors' => [
+                [
+                    'name' => 'Your Name',
+                    'email' => 'your.email@example.com',
+                ],
+            ],
+            'require' => new \stdClass(),
+        ];
 
-        file_put_contents("{$packagePath}/config.php", $configContent);
+        file_put_contents("{$packagePath}/composer.json", json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
+
+    public static string $description = 'Create Package Command';
 }
