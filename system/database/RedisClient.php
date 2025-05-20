@@ -7,39 +7,43 @@ class RedisClient
     /**
      * @var \Redis
      */
-    private $redis;
+    private static $instance;
 
     /**
-     * RedisClient constructor.
-     *
-     * @param array $config
-     * @throws \RuntimeException
+     * Prevent direct instantiation
      */
-    public function __construct(array $config)
-    {
-        try {
-            $this->redis = new \Redis();  // PHP's Redis extension class
-            $this->redis->connect(
-                $config['host'],
-                $config['port'],
-                $config['timeout'] ?? 2.5
-            );
-
-            if (isset($config['database'])) {
-                $this->redis->select($config['database']);
-            }
-        } catch (\RedisException $e) {
-            throw new \RuntimeException('Redis connection failed: ' . $e->getMessage());
-        }
-    }
+    private function __construct() {}
 
     /**
-     * Get the Redis client.
+     * Get the singleton Redis instance
      *
      * @return \Redis
+     * @throws \RuntimeException
      */
-    public function getClient(): \Redis
+    public static function get(): \Redis
     {
-        return $this->redis;
+        if (!self::$instance) {
+            $config = require __DIR__ . '/../../config/database.php';
+            $redisConfig = $config['cache']['redis'];
+
+            try {
+                $redis = new \Redis();
+                $redis->connect(
+                    $redisConfig['host'],
+                    (int) $redisConfig['port'],
+                    (float) $redisConfig['timeout'] ?? 2.5
+                );
+
+                if (isset($redisConfig['database'])) {
+                    $redis->select((int) $redisConfig['database']);
+                }
+
+                self::$instance = $redis;
+            } catch (\RedisException $e) {
+                throw new \RuntimeException('Redis connection failed: ' . $e->getMessage());
+            }
+        }
+
+        return self::$instance;
     }
 }
