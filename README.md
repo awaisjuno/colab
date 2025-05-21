@@ -35,15 +35,19 @@ A sync command that auto-discovers job and scheduler classes and updates the dat
 Developer Workflow
 
 To Create a new job
+
 php cli create:job SendWelcomeEmail
 
 To Sync Jobs classes
+
 php cli sync:jobs
 
 To Create a new Schedulers
+
 php cli create:schedulers RedisCleaning
 
 To Sync Schedulers classes
+
 php cli sync:schedulers
 
 Sync Scan schedulers & Jobs directories
@@ -60,13 +64,23 @@ Admin Panel Features
 The admin panel is designed not just for control but for monitoring and debugging:
 Job & Scheduler Management:
 •	Enable/Disable any job or scheduler
+
 •	Modify execution time or priority
+
 •	View job details, next run time, and assigned class
+
 Real Time Stats:
+
 •	Watch currently running jobs and scheduled tasks
+
 •	See execution time, success rate, last run timestamp
+
 •	Monitor failed jobs with error logs and stack traces
+
 •	Re-queue failed jobs with one click
+
 Sequence Control:
+
 •	Reorder jobs or schedule priorities via drag & drop
+
 •	Admin can adjust execution queue directly
