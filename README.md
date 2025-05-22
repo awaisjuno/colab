@@ -61,8 +61,12 @@ Scheduler Daemon: Handles repeating tasks based on time.
 Status Logger: Each job run is logged with real-time status: Pending, Running, Completed, or Failed.
 
 Admin Panel Features
+
 The admin panel is designed not just for control but for monitoring and debugging:
+
 Job & Scheduler Management:
+
+
 •	Enable/Disable any job or scheduler
 
 •	Modify execution time or priority
@@ -70,6 +74,7 @@ Job & Scheduler Management:
 •	View job details, next run time, and assigned class
 
 Real Time Stats:
+
 
 •	Watch currently running jobs and scheduled tasks
 
