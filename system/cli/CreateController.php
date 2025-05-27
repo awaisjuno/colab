@@ -14,7 +14,7 @@ class CreateController
     public function execute()
     {
         // Define the controller directory
-        $controllerDir = ROOT_DIR . 'app/controller/';
+        $controllerDir = ROOT_DIR . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR;
 
         // Ensure the controller directory exists
         if (!is_dir($controllerDir)) {

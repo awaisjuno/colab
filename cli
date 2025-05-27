@@ -7,9 +7,9 @@ define('ROOT_DIR', __DIR__);
 
 require_once ROOT_DIR . '/vendor/autoload.php';
 
-use Core\Bootstrap\EnvBootstrap;
-use Core\Bootstrap\ErrorBootstrap;
-use Core\Bootstrap\KernelBootstrap;
+use System\core\Bootstrap\EnvBootstrap;
+use System\core\Bootstrap\ErrorBootstrap;
+use System\core\Bootstrap\KernelBootstrap;
 
 EnvBootstrap::load();
 ErrorBootstrap::setup();

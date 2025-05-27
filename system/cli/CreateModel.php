@@ -16,7 +16,7 @@ class CreateModel
     public function execute()
     {
         // Define the models directory
-        $modelDir = ROOT_DIR . 'app/model/';
+        $modelDir = ROOT_DIR . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'model' . DIRECTORY_SEPARATOR;
 
         // Create the directory if it doesn't exist
         if (!is_dir($modelDir)) {
