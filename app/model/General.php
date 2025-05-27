@@ -4,39 +4,92 @@ namespace App\Model;
 
 use System\Model;
 
+/**
+ * Class General
+ *
+ * Model class for the 'general' table.
+ */
 class General extends Model
 {
-    protected $table = 'general';
-    protected $primaryKey = 'id';
-    protected $timestamps = true;
+    /**
+     * The name of the database table used by this model.
+     */
+    protected string $tableName = 'general';
 
+    /**
+     * General constructor.
+     */
     public function __construct()
     {
         parent::__construct();
     }
 
-    public function insertData(array $data)
+    /**
+     * Insert data into the 'general' table.
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function insertData(array $data): bool
     {
-        return $this->insert($this->table, $data);
+        return $this->insert($this->tableName, $data);
     }
 
-    public function updateData($id, array $data)
+    /**
+     * Update a record by ID.
+     *
+     * @param int|string $id
+     * @param array $data
+     * @return bool
+     */
+    public function updateData($id, array $data): bool
     {
-        return $this->update($this->table, $data, ['id' => $id]);
+        return $this->update($this->tableName, $data, ['id' => $id]);
     }
 
-    public function deleteData($id)
+    /**
+     * Delete a record by ID.
+     *
+     * @param int|string $id
+     * @return bool
+     */
+    public function deleteData($id): bool
     {
-        return $this->delete($this->table, ['id' => $id]);
+        return $this->delete($this->tableName, ['id' => $id]);
     }
 
-    public function selectData(array $conditions = [])
+    /**
+     * Get multiple records from the table with optional conditions.
+     *
+     * @param array $conditions
+     * @param int|null $limit
+     * @param string|null $orderBy
+     * @return array
+     */
+    public function selectData(array $conditions = [], int $limit = null, string $orderBy = null): array
     {
-        return $this->select($this->table, $conditions);
+        return $this->select($this->tableName, $conditions, $limit, $orderBy);
     }
 
-    public function findData($id)
+    /**
+     * Get a single record by ID.
+     *
+     * @param int|string $id
+     * @return array|null
+     */
+    public function findData($id): ?array
     {
-        return $this->select($this->table, ['id' => $id])->first();
+        return $this->selectOne($this->tableName, ['id' => $id]);
+    }
+
+    /**
+     * Count rows in the general table with optional conditions.
+     *
+     * @param array $conditions
+     * @return int
+     */
+    public function countData(array $conditions = []): int
+    {
+        return $this->count($this->tableName, $conditions);
     }
 }

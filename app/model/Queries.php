@@ -3,50 +3,93 @@
 namespace App\Model;
 
 use System\Model;
+use PDO;
 
 class Queries extends Model
 {
+    /**
+     * Queries constructor.
+     */
     public function __construct()
     {
         parent::__construct();
     }
 
-    public function insertPage($page)
+    /**
+     * Insert a new page.
+     *
+     * @param array $page
+     * @return bool
+     */
+    public function insertPage(array $page): bool
     {
-        $this->insert('page', $page);
+        return $this->insert('page', $page);
     }
 
-    public function fetchPages()
+    /**
+     * Fetch all pages.
+     *
+     * @return array
+     */
+    public function fetchPages(): array
     {
-        return $this->select('page')->get();
+        return $this->select('page');
     }
 
-    public function insertTokenAPI($data)
+    /**
+     * Insert API token data.
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function insertTokenAPI(array $data): bool
     {
-        $this->insert('api_detail', $data);
+        return $this->insert('api_detail', $data);
     }
 
-    public function fetchAPIToken()
+    /**
+     * Fetch all API tokens.
+     *
+     * @return array
+     */
+    public function fetchAPIToken(): array
     {
-        return $this->select('api_detail')->get();
+        return $this->select('api_detail');
     }
 
-    public function fetchSchedulers()
+    /**
+     * Fetch all schedulers.
+     *
+     * @return array
+     */
+    public function fetchSchedulers(): array
     {
-        return $this->select('schedulers')->get();
+        return $this->select('schedulers');
     }
 
-    public function fetchUsers()
+    /**
+     * Fetch all users with user details using manual join.
+     *
+     * @return array
+     */
+    public function fetchUsers(): array
     {
-        return $this->table('user')
-            ->join('user_detail', 'user.user_id = user_detail.user_id', 'LEFT')
-            ->selectColumns()
-            ->get();
+        $sql = "SELECT * FROM user 
+                LEFT JOIN user_detail 
+                ON user.user_id = user_detail.user_id";
+        $stmt = $this->getPDO()->query($sql);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function del_route($id)
+    /**
+     * Delete a page by page_id.
+     *
+     * @param int|string $id
+     * @return bool
+     */
+    public function deleteRoute(int|string $id): bool
     {
-        $this->where('page_id', $id);
-        return $this->delete('page');
+        return $this->delete('page', ['page_id' => $id]);
     }
 }

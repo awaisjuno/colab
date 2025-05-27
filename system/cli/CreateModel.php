@@ -6,68 +6,128 @@ use System\Model;
 
 class CreateModel
 {
-    private $modelName;
+    private string $modelName;
 
-    public function __construct($modelName)
+    public function __construct(string $modelName)
     {
         $this->modelName = $modelName;
     }
 
-    public function execute()
+    public function execute(): void
     {
-        // Define the models directory
-        $modelDir = ROOT_DIR . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'model' . DIRECTORY_SEPARATOR;
+        $modelDir = ROOT_DIR . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR;
 
-        // Create the directory if it doesn't exist
         if (!is_dir($modelDir)) {
-            echo "Error: Models directory does not exist. Creating...\n";
+            echo "Models directory does not exist. Creating...\n";
             mkdir($modelDir, 0777, true);
         }
 
-        // Define the model file path
         $modelFile = $modelDir . ucfirst($this->modelName) . '.php';
 
-        // Check if the model file already exists
         if (file_exists($modelFile)) {
             echo "Error: Model file '{$modelFile}' already exists.\n";
             return;
         }
 
-        // Generate the model content based on the model name
-        $modelTemplate = "<?php\n\n";
-        $modelTemplate .= "namespace App\\Model;\n\n";
-        $modelTemplate .= "use System\\Model;\n\n";
-        $modelTemplate .= "class " . ucfirst($this->modelName) . " extends Model\n{\n";
-        $modelTemplate .= "    protected \$table = '" . strtolower($this->modelName) . "';\n";
-        $modelTemplate .= "    protected \$primaryKey = 'id';\n";
-        $modelTemplate .= "    protected \$timestamps = true;\n\n";
-        $modelTemplate .= "    public function __construct()\n";
-        $modelTemplate .= "    {\n";
-        $modelTemplate .= "        parent::__construct();\n";
-        $modelTemplate .= "    }\n\n";
-        $modelTemplate .= "    public function insertData(array \$data)\n";
-        $modelTemplate .= "    {\n";
-        $modelTemplate .= "        return \$this->insert(\$this->table, \$data);\n";
-        $modelTemplate .= "    }\n\n";
-        $modelTemplate .= "    public function updateData(\$id, array \$data)\n";
-        $modelTemplate .= "    {\n";
-        $modelTemplate .= "        return \$this->update(\$this->table, \$data, ['id' => \$id]);\n";
-        $modelTemplate .= "    }\n\n";
-        $modelTemplate .= "    public function deleteData(\$id)\n";
-        $modelTemplate .= "    {\n";
-        $modelTemplate .= "        return \$this->delete(\$this->table, ['id' => \$id]);\n";
-        $modelTemplate .= "    }\n\n";
-        $modelTemplate .= "    public function selectData(array \$conditions = [])\n";
-        $modelTemplate .= "    {\n";
-        $modelTemplate .= "        return \$this->select(\$this->table, \$conditions);\n";
-        $modelTemplate .= "    }\n\n";
-        $modelTemplate .= "    public function findData(\$id)\n";
-        $modelTemplate .= "    {\n";
-        $modelTemplate .= "        return \$this->select(\$this->table, ['id' => \$id])->first();\n";
-        $modelTemplate .= "    }\n";
-        $modelTemplate .= "}\n";
+        $tableName = strtolower($this->modelName);
 
-        // Write the model template to the file
+        $modelTemplate = <<<PHP
+<?php
+
+namespace App\Model;
+
+use System\Model;
+
+/**
+ * Class {$this->modelName}
+ *
+ * Model for the '{$tableName}' table.
+ */
+class {$this->modelName} extends Model
+{
+    /**
+     * The table associated with the model.
+     */
+    protected string \$tableName = '{$tableName}';
+
+    /**
+     * The primary key for the table.
+     */
+    protected string \$primaryKey = 'id';
+
+    /**
+     * Indicates if the model should manage timestamps.
+     */
+    protected bool \$timestamps = true;
+
+    /**
+     * {$this->modelName} constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Insert data into the table.
+     *
+     * @param array \$data
+     * @return bool
+     */
+    public function insertData(array \$data): bool
+    {
+        return \$this->insert(\$this->tableName, \$data);
+    }
+
+    /**
+     * Update a record by ID.
+     *
+     * @param int|string \$id
+     * @param array \$data
+     * @return bool
+     */
+    public function updateData(\$id, array \$data): bool
+    {
+        return \$this->update(\$this->tableName, \$data, [\$this->primaryKey => \$id]);
+    }
+
+    /**
+     * Delete a record by ID.
+     *
+     * @param int|string \$id
+     * @return bool
+     */
+    public function deleteData(\$id): bool
+    {
+        return \$this->delete(\$this->tableName, [\$this->primaryKey => \$id]);
+    }
+
+    /**
+     * Select records with optional conditions.
+     *
+     * @param array \$conditions
+     * @param int|null \$limit
+     * @param string|null \$orderBy
+     * @return array
+     */
+    public function selectData(array \$conditions = [], ?int \$limit = null, ?string \$orderBy = null): array
+    {
+        return \$this->select(\$this->tableName, \$conditions, \$limit, \$orderBy);
+    }
+
+    /**
+     * Find a single record by ID.
+     *
+     * @param int|string \$id
+     * @return array|null
+     */
+    public function findData(\$id): ?array
+    {
+        return \$this->selectOne(\$this->tableName, [\$this->primaryKey => \$id]);
+    }
+}
+PHP;
+
         file_put_contents($modelFile, $modelTemplate);
 
         echo "Model file '{$modelFile}' created successfully.\n";
