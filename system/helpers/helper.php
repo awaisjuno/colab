@@ -35,6 +35,8 @@ function current_url() {
 
 function form_open($action = '', $method = 'post', $attributes = []) {
     $attrs = '';
+    if (!is_array($attributes)) $attributes = [];
+
     foreach ($attributes as $key => $val) {
         $attrs .= "$key=\"$val\" ";
     }
@@ -49,42 +51,53 @@ function form_close() {
 
 function form_input($name, $value = '', $attributes = []) {
     $attrs = '';
+    if (!is_array($attributes)) $attributes = [];
+
     foreach ($attributes as $key => $val) {
         $attrs .= "$key=\"$val\" ";
     }
+
     return "<input type=\"text\" name=\"$name\" value=\"$value\" $attrs />";
 }
 
-function form_label($value)
-{
-    return "<label>". $value ."</label>";
+function form_label($value) {
+    return "<label>" . htmlspecialchars($value) . "</label>";
 }
 
 function form_password($name, $attributes = []) {
     $attrs = '';
+    if (!is_array($attributes)) $attributes = [];
+
     foreach ($attributes as $key => $val) {
         $attrs .= "$key=\"$val\" ";
     }
+
     return "<input type=\"password\" name=\"$name\" $attrs />";
 }
 
 function form_textarea($name, $value = '', $attributes = []) {
     $attrs = '';
+    if (!is_array($attributes)) $attributes = [];
+
     foreach ($attributes as $key => $val) {
         $attrs .= "$key=\"$val\" ";
     }
+
     return "<textarea name=\"$name\" $attrs>$value</textarea>";
 }
 
 function form_hidden($name, $value) {
-    return "<input type=\"hidden\" name=\"$name\" value=\"$value\" />";
+    return "<input type=\"hidden\" name=\"$name\" value=\"" . htmlspecialchars($value) . "\" />";
 }
 
 function form_submit($name, $value = 'Submit', $attributes = []) {
     $attrs = '';
+    if (!is_array($attributes)) $attributes = [];
+
     foreach ($attributes as $key => $val) {
         $attrs .= "$key=\"$val\" ";
     }
+
     return "<input type=\"submit\" name=\"$name\" value=\"$value\" $attrs />";
 }
 
