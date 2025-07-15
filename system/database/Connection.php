@@ -55,6 +55,21 @@ class Connection
     }
 
     /**
+     * Execute a SQL query using prepared statements.
+     *
+     * @param string $sql     The SQL query to execute (with placeholders if needed).
+     * @param array  $params  The parameters to bind to the SQL query (optional).
+     *
+     * @return \PDOStatement  The executed PDO statement object (can be used for fetch operations).
+     */
+    public function query($sql, $params = [])
+    {
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt;
+    }
+
+    /**
      * Returns the PDO instance.
      *
      * @return \PDO The PDO connection instance.
